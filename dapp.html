@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>NFT 浏览器</title>
+        <script language="javascript" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script language="javascript" type="text/javascript" src="web3.min.js"></script>
+        <script language="javascript" type="text/javascript" src="contract_abi.js"></script>
+
+    </head>
+    <body>
+        <button id="btn-wallet" onclick="linkWallet()">连接 wallet</button>
+        <button id="btn-view" onclick="view_NFT()">查看 NFT</button>
+        <button id="btn-mint" onclick="mint_NFT()">生成 NFT</button>
+        <div id="NFT-show">
+            
+        </div>
+        <div id="img"></div>
+        <script>
+            var web3Provider;
+            var web3js;
+            function linkWallet() {
+                if (ethereum) {
+                    web3Provider = ethereum;
+                    // 新版需要请求用户授权
+                    try {
+                    ethereum.enable();
+                    } catch (error) {
+                    alert("用户取消授权");
+                    return;
+                    }
+                } else if (web3) {
+                    // MetaMask Legacy dapp browsers...
+                    web3Provider = web3.currentProvider;
+                    console.log("web3.currentProvider:");
+                    console.log(web3.currentProvider);
+                } else {
+                    web3Provider = new Web3.providers.HttpProvider('http://localhost:8545');
+                    console.log("https://http-testnet.hecochain.com");
+                }
+                web3js = new Web3(web3Provider);
+
+                document.getElementById("btn-wallet").innerText = "重新连接";
+                }
+            function mint_NFT(){
+                
+            }
+            function view_NFT(){
+
+            }
+        </script>
+    </body>
+</html>

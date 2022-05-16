@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>NFT生成</title>
+    <script language="javascript" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script language="javascript" type="text/javascript" src="web3.min.js"></script>
+    <!-- 1. Include cryptozombies_abi.js here -->
+    <script src="https://unpkg.com/@metamask/detect-provider/dist/detect-provider.min.js"></script>
+    <script language="javascript" type="text/javascript" src="contract_abi.js"></script>
+  </head>
+  <body>
+    <button id="btn-wallet" onclick="linkWallet()">连接wallet</button>
+    <button onclick="getAccount()">获取account</button>
+    
+    <input id="input-account" readonly="readonly" type="text" value="" />
+
+    <script>
+      // 2. Start code here
+      var contract_demo;
+      function startApp(){
+         var contract_Address = "0xc52272f7dd054feaba2ab42aba757330b3badf03";
+         contract_demo = new web3js.eth.Contract(contract_abi, contract_Address);
+         console.log('test begin')
+         contract_demo.methods.mint('0x9979a3e180afbec62E469BaECCf603bF09aDAF8e').send({from: '0x9979a3e180afbec62E469BaECCf603bF09aDAF8e'}, function(error, transactionHash){
+            console.log(transactionHash)
+            console.log('............')
+          });
+        console.log('test over')
+        }
+
+        async function login(){
+            if (typeof window.ethereum !== 'undefined') {
+                let addr=await ethereum.request({ method: 'eth_requestAccounts' });//授权连接钱包
+                console.log('用户钱包地址:',addr[0]);
+            }else{
+                console.log('未安装钱包插件！');
+            }
+        }
+        login()
+
+        window.addEventListener('load', function() {
+            // Checking if Web3 has been injected by the browser (Mist/MetaMask)
+            if (typeof Web3 !== 'undefined') {
+             // Use Mist/MetaMask's provider
+              web3js = new Web3(web3.currentProvider);
+            } else {
+               console.log("fail connect");
+              // Handle the case where the user doesn't have Metamask installed
+              // Probably show them a message prompting them to install Metamask
+            }
+
+            if (typeof window.ethereum !== 'undefined') {
+	            console.log('MetaMask is  installed!');
+            }
+            // Now you can start your app & access web3 freely:
+            startApp()
+
+      })
+      var web3Provider;
+  var web3js;
+
+  function linkWallet() {
+    if (ethereum) {
+      web3Provider = ethereum;
+      // 新版需要请求用户授权
+      try {
+        ethereum.enable();
+      } catch (error) {
+        alert("用户取消授权");
+        return;
+      }
+    } else if (web3) {
+      // MetaMask Legacy dapp browsers...
+      web3Provider = web3.currentProvider;
+      console.log("web3.currentProvider:");
+      console.log(web3.currentProvider);
+    } else {
+      web3Provider = new Web3.providers.HttpProvider('http://localhost:8545');
+      console.log("https://http-testnet.hecochain.com");
+    }
+    web3js = new Web3(web3Provider);
+
+    document.getElementById("btn-wallet").innerText = "重新连接";
+  }
+
+  function getAccount() {
+    if (!web3js) {
+      document.getElementById("input-account").value = "请先连接 wallet";
+      return;
+    }
+    web3js.eth.getAccounts(function(error, result) {
+      if (!error) {
+        document.getElementById("input-account").value = result;
+      } else {
+        document.getElementById("input-account").value = "获取地址失败";
+      }
+    });
+  }
+    </script>
+  </body>
+</html>
